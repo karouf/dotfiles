@@ -169,3 +169,11 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+shopt -s globstar
+export DOTFILES_ROOT=$HOME/code/dotfiles
+
+for file in $DOTFILES_ROOT/**/*.bash
+do
+  source $file
+done
