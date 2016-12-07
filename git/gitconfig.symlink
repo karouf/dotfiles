@@ -1,0 +1,5 @@
+[user]
+	email = karouf@gmail.com
+	name = Renaud Martinet
+[core]
+	excludesfile = ~/.gitignore
