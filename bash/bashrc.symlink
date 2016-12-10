@@ -177,3 +177,6 @@ for file in $DOTFILES_ROOT/**/*.bash
 do
   source $file
 done
+
+export VISUAL=vim
+export EDITOR=$VISUAL
