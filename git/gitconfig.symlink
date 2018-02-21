@@ -3,3 +3,5 @@
 	name = Renaud Martinet
 [core]
 	excludesfile = ~/.gitignore
+[color]
+	status = auto
