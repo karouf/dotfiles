@@ -114,6 +114,28 @@ install_dotfiles () {
   done
 }
 
+replace_variables () {
+  info "replacing variables"
+
+  while read line
+  do
+    setting="$( echo "$line" | cut -d '=' -f 1 )"
+    value="$( echo "$line" | cut -d '=' -f 2- )"
+
+    find . -type f \( -name "*.symlink" -or -name "*.bash" \) \
+      ! -path "./.git/*" -print0 \
+      | xargs -0 sed -i -e "s;%${setting}%;${value};g"
+
+    if [ $? == 0 ]
+    then
+      success "${setting} = ${value}"
+    else
+      fail "${setting} = ${value}"
+    fi
+  done < config
+}
+
+replace_variables
 install_dotfiles
 
 echo ''

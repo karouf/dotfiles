@@ -1,6 +1,6 @@
 [user]
-	email = karouf@gmail.com
 	name = Renaud Martinet
+	email = %EMAIL%
 [core]
 	excludesfile = ~/.gitignore
 [color]
