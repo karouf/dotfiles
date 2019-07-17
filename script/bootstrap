@@ -112,6 +112,12 @@ install_dotfiles () {
     dst="$HOME/.$(basename "${src%.*}")"
     link_file "$src" "$dst"
   done
+
+  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink.generated' -not -path '*.git*')
+  do
+    dst="$HOME/.$(basename "${src//.symlink.generated}")"
+    link_file "$src" "$dst"
+  done
 }
 
 replace_variables () {
@@ -122,11 +128,19 @@ replace_variables () {
     setting="$( echo "$line" | cut -d '=' -f 1 )"
     value="$( echo "$line" | cut -d '=' -f 2- )"
 
-    find . -type f \( -name "*.symlink" -or -name "*.bash" \) \
-      ! -path "./.git/*" -print0 \
-      | xargs -0 sed -i -e "s;%${setting}%;${value};g"
+    success=1
+    for template in $(find . -type f -name "*.template" \
+	    ! -path "./.git/*")
+    do
+      sed -e "s;%${setting}%;${value};g" $template > "${template//.template/}.generated"
 
-    if [ $? == 0 ]
+      if [ $? != 0 ]
+      then
+	success=0
+      fi
+    done
+
+    if [ $success == 1 ]
     then
       success "${setting} = ${value}"
     else
