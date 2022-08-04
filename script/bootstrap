@@ -80,30 +80,30 @@ link_file () {
     if [ "$overwrite" == "true" ]
     then
       rm -rf "$dst"
-      success "removed $dst"
+      success "Removed $dst"
     fi
 
     if [ "$backup" == "true" ]
     then
       mv "$dst" "${dst}.backup"
-      success "moved $dst to ${dst}.backup"
+      success "Moved $dst to ${dst}.backup"
     fi
 
     if [ "$skip" == "true" ]
     then
-      success "skipped $src"
+      success "Skipped $src"
     fi
   fi
 
   if [ "$skip" != "true" ]  # "false" or empty
   then
     ln -s "$1" "$2"
-    success "linked $1 to $2"
+    success "Linked $1 to $2"
   fi
 }
 
 install_dotfiles () {
-  info 'installing dotfiles'
+  info 'Installing dotfiles'
 
   local overwrite_all=false backup_all=false skip_all=false
 
@@ -121,7 +121,7 @@ install_dotfiles () {
 }
 
 replace_variables () {
-  info "replacing variables"
+  info "Replacing variables"
 
   while read line
   do
@@ -150,7 +150,7 @@ replace_variables () {
 }
 
 check_existing_variables () {
-  info "checking existing variables"
+  info "Checking existing variables"
 
   while read line
   do
