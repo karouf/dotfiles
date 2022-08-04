@@ -1,5 +1,5 @@
 [user]
-	name = Renaud Martinet
+	name = %NAME%
 	email = %EMAIL%
 [core]
 	excludesfile = ~/.gitignore
