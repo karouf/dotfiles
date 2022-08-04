@@ -149,6 +149,25 @@ replace_variables () {
   done < config
 }
 
+check_existing_variables () {
+  info "checking existing variables"
+
+  while read line
+  do
+    filename="$( echo "$line" | cut -d ':' -f 1 )"
+    variable="$( echo "$line" | cut -d ':' -f 2- )"
+
+    matches=$(cut -d "=" -f 1 config | grep "^$variable$" | wc -l)
+    if [ $matches == 0 ]
+    then
+      fail "Variable $variable in use in file '$filename' but not declared in config file"
+    fi
+  done < <(grep -ERo "%[A-Z_]+%" --include *.template | sort | uniq | tr -d "%")
+
+  success "All variables are configured"
+}
+
+check_existing_variables
 replace_variables
 install_dotfiles
 
