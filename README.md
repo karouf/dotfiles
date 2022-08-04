@@ -1,5 +1,9 @@
 # Dotfiles
 
+## Requirements
+- git
+- bash
+
 ## Installation
 
 ```
