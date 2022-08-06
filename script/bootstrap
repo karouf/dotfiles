@@ -123,30 +123,42 @@ install_dotfiles () {
 replace_variables () {
   info "Replacing variables"
 
-  while read line
+  for template in $(find . -type f -name "*.template" \
+          ! -path "./.git/*")
   do
-    setting="$( echo "$line" | cut -d '=' -f 1 )"
-    value="$( echo "$line" | cut -d '=' -f 2- )"
+    generated="${template//.template/}.generated"
 
     success=1
-    for template in $(find . -type f -name "*.template" \
-	    ! -path "./.git/*")
+    first_pass=1
+
+    while read line
     do
-      sed -e "s;%${setting}%;${value};g" $template > "${template//.template/}.generated"
+      setting="$( echo "$line" | cut -d '=' -f 1 )"
+      value="$( echo "$line" | cut -d '=' -f 2- )"
+
+      if [ $first_pass == 1 ]
+      then
+        sed -e "s;%${setting}%;${value};g" $template > $generated
+	first_pass=0
+      else
+        sed -e "s;%${setting}%;${value};g" $generated > "$generated.tmp" &&
+	rm $generated &&
+	mv "$generated.tmp" $generated
+      fi
 
       if [ $? != 0 ]
       then
-	success=0
+        success=0
       fi
-    done
+    done < config
 
     if [ $success == 1 ]
     then
-      success "${setting} = ${value}"
+      success "${template}"
     else
-      fail "${setting} = ${value}"
+      fail "${template}"
     fi
-  done < config
+  done
 }
 
 check_existing_variables () {
