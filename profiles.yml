@@ -1,0 +1,56 @@
+variables:
+  name: Renaud Martinet
+  email: me@renaudmarti.net
+
+profiles:
+  common:
+    packages:
+      bash:
+        commands:
+          - "chsh -s /bin/bash"
+        links:
+          - .bashrc_logout
+          - .bashrc
+          - .profile
+      gnupg2:
+        links:
+          - .gnupg
+
+  dev:
+    deps:
+      - common
+    packages:
+      vim:
+        links:
+          - .vimrc
+      git:
+        templates:
+          - .gitconfig
+        links:
+          - .gitignore
+  
+  ruby:
+    deps:
+      - dev
+    roles:
+      - rvm
+  
+  python:
+    deps:
+      - dev
+    packages:
+      - python3
+      - python3-pip
+      - virtualenv
+
+  home:
+    featured: yes
+    deps:
+      - ruby
+      - python
+
+  work:
+    featured: yes
+    deps:
+      - common
+      - ruby
