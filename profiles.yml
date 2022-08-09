@@ -17,7 +17,7 @@ profiles:
           - .gnupg
 
   dev:
-    deps:
+    dependencies:
       - common
     packages:
       vim:
@@ -30,13 +30,13 @@ profiles:
           - .gitignore
   
   ruby:
-    deps:
+    dependencies:
       - dev
     roles:
       - rvm
   
   python:
-    deps:
+    dependencies:
       - dev
     packages:
       - python3
@@ -45,12 +45,12 @@ profiles:
 
   home:
     featured: yes
-    deps:
+    dependencies:
       - ruby
       - python
 
   work:
     featured: yes
-    deps:
+    dependencies:
       - common
       - ruby
