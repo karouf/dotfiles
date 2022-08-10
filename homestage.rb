@@ -178,7 +178,7 @@ module Homestage
     end
 
     def to_homemaker(profile)
-      { 
+      task = {
         "#{profile.name}_#{name}" => { "deps" => [
           "#{profile.name}_#{name}_install",
           "#{profile.name}_#{name}_config",
@@ -191,6 +191,10 @@ module Homestage
           "templates" => templates.map { |t| [t.path, "#{profile.name}/#{name}/#{t.path}"] },
         }
       }
+
+      task["#{profile.name}_#{name}_config"]["deps"] = ["config_variables"] if templates
+
+      task
     end
   end
 
