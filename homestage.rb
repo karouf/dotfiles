@@ -261,6 +261,15 @@ module Homestage
   class InvalidConfig < RuntimeError; end
 end
 
+def usage
+  puts "homestage.rb <action>"
+  puts
+  puts "Actions:"
+  puts "  do <profile>    apply given profile"
+  puts "  help            display this message"
+  puts "  list            list available profiles"
+end
+
 config = Homestage::Config.parse("profiles.yml")
 
 action = ARGV.shift
@@ -275,4 +284,6 @@ when "do"
   system("homemaker -verbose -task #{profile} tmp_homemaker_generated.yml .")
 when "list"
   puts config.leaf_profiles
+else
+  usage
 end
