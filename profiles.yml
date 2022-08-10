@@ -7,7 +7,7 @@ profiles:
     packages:
       bash:
         commands:
-          - "chsh -s /bin/bash"
+          - "[ $SHELL = '/bin/bash' ] || chsh -s /bin/bash"
         links:
           - .bashrc_logout
           - .bashrc

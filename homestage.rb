@@ -185,7 +185,7 @@ module Homestage
         ] },
         "#{profile.name}_#{name}_install" => { "cmds" => [["@install", name]] },
         "#{profile.name}_#{name}_config" => {
-          "cmds" => commands.map { |c| c.line.split(" ") },
+          "cmds" => commands.map { |c| c.to_homemaker },
           # handle path to files: <profile>/<package>/<file> linked to <file> in $HOME
           "links" => links.map { |l| [l.path, "#{profile.name}/#{name}/#{l.path}"] },
           "templates" => templates.map { |t| [t.path, "#{profile.name}/#{name}/#{t.path}"] },
@@ -227,6 +227,10 @@ module Homestage
 
     def initialize(line)
       @line = line
+    end
+
+    def to_homemaker
+      ["sh", "-c", line]
     end
   end
 
