@@ -68,6 +68,17 @@ module Homestage
       reverse_dependencies.select { |name, reqs| reqs.empty? }.map { |name, reqs| name }
     end
 
+    def used_profiles_for(profile)
+      profiles = [profile]
+
+      profile.dependencies.map { |d| self.profiles.find { |p| p.name == d.name } }.each do |dependency|
+        profiles << dependency
+        profiles += used_profiles_for(dependency)
+      end
+
+      profiles.uniq
+    end
+
     private
 
     def self.valid_config?(file)
@@ -187,8 +198,8 @@ module Homestage
         "#{profile.name}_#{name}_config" => {
           "cmds" => commands.map { |c| c.to_homemaker },
           # handle path to files: <profile>/<package>/<file> linked to <file> in $HOME
-          "links" => links.map { |l| [l.path, "#{profile.name}/#{name}/#{l.path}"] },
-          "templates" => templates.map { |t| [t.path, "#{profile.name}/#{name}/#{t.path}"] },
+          "links" => links.map { |l| [l.path, "profiles/#{profile.name}/#{name}/#{l.path}"] },
+          "templates" => templates.map { |t| [t.path, "profiles/#{profile.name}/#{name}/#{t.path}"] },
         }
       }
 
@@ -285,7 +296,25 @@ when "do"
   end
 
   profile = ARGV.shift
-  system("homemaker -verbose -task #{profile} tmp_homemaker_generated.yml .")
+  found_profile = config.profiles.find { |p| p.name == profile }
+
+  raise "Profile #{profile} unknown" unless found_profile
+
+  system("homemaker -task #{found_profile.name} tmp_homemaker_generated.yml .")
+  system("rm tmp_homemaker_generated.yml")
+
+  system("rm -rf current/*")
+  profile_dirs = []
+  Dir.chdir('profiles') do
+    profile_dirs = Dir.glob('*').select { |f| File.directory? f }
+  end
+
+  config.used_profiles_for(found_profile).each do |profile|
+    if profile_dirs.include? profile.name
+      system("ln -s #{profile.name} current/#{profile.name}")
+    end
+  end
+
 when "list"
   puts config.leaf_profiles
 else

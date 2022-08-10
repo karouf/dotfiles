@@ -173,7 +173,7 @@ esac
 # Source all the bash scripts from my dotfiles repo
 export DOTFILES_ROOT=$HOME/code/dotfiles
 
-for file in $DOTFILES_ROOT/**/*.bash
+for file in $DOTFILES_ROOT/current/**/*.bash
 do
   source $file
 done

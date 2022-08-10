@@ -1,6 +1,6 @@
 [user]
-	name = {{ .Env.NAME }}
-	email = {{ .Env.EMAIL }}
+	name = {{ .Env.name }}
+	email = {{ .Env.email }}
 [core]
 	excludesfile = ~/.gitignore
 [color]
