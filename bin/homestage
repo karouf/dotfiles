@@ -167,10 +167,11 @@ module Homestage
       case config.class.to_s
       when "String"
         Package.new(config)
-      when "Array"
-        package = Package.new(config.first)
+      when "Hash"
+        package_name = config.keys.first
+        config = config.values.first
 
-        config = config.last
+        package = Package.new(package_name)
 
         package.commands = parse_config_item(config, "commands", Command)
         package.links = config["links"].map { |c| Link.parse(c) } if config["links"]
@@ -300,7 +301,7 @@ when "do"
 
   raise "Profile #{profile} unknown" unless found_profile
 
-  system("homemaker -task #{found_profile.name} tmp_homemaker_generated.yml .")
+  system("homemaker -verbose -task #{found_profile.name} tmp_homemaker_generated.yml .")
   system("rm tmp_homemaker_generated.yml")
 
   system("rm -rf current/*")

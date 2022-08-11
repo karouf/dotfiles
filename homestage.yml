@@ -5,29 +5,31 @@ variables:
 profiles:
   common:
     packages:
-      bash:
-        commands:
-          - "[ $SHELL = '/bin/bash' ] || chsh -s /bin/bash"
-        links:
-          - .bashrc_logout
-          - .bashrc
-          - .profile
-      gnupg2:
-        links:
-          - .gnupg
+      - bash:
+          commands:
+            - "[ $SHELL = '/bin/bash' ] || chsh -s /bin/bash"
+          links:
+            - .bashrc_logout
+            - .bashrc
+            - .profile
+      - gnupg2:
+          links:
+            - .gnupg
+      - chromium
+      - firefox-esr
 
   dev:
     dependencies:
       - common
     packages:
-      vim:
-        links:
-          - .vimrc
-      git:
-        templates:
-          - .gitconfig
-        links:
-          - .gitignore
+      - vim:
+          links:
+            - .vimrc
+      - git:
+          templates:
+            - .gitconfig
+          links:
+            - .gitignore
   
   ruby:
     dependencies:
