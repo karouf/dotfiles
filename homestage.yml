@@ -1,6 +1,4 @@
-variables:
-  name: Renaud Martinet
-  email: me@renaudmarti.net
+variables: variables.yml
 
 profiles:
   common:

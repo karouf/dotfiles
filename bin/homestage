@@ -25,7 +25,7 @@ module Homestage
       raise InvalidConfig unless valid_config?(config_file)
 
       config = Config.new
-      config.variables = parse_config_item(config_file, "variables", Variable)
+      config.variables = parse_variables(config_file["variables"])
       config.profiles = parse_config_item(config_file, "profiles", Profile)
       config
     end
@@ -35,7 +35,15 @@ module Homestage
 
       homemaker_tasks = {}
       homemaker_tasks["default"] = default_task
-      homemaker_tasks["config_variables"] = config_variables_task
+
+      homemaker_tasks["global_config_variables"] = {}
+      profiles.each do |profile|
+        homemaker_tasks["#{profile.name}_config_variables"] = {}
+      end
+
+      variables.group_by(&:scope).each do |scope, variables|
+        homemaker_tasks["#{scope}_config_variables"].merge!(config_variables_task(variables))
+      end
 
       profiles.each do |profile|
         homemaker_tasks.merge!(profile.to_homemaker)
@@ -92,7 +100,7 @@ module Homestage
       { "deps" => ["common"] }
     end
 
-    def config_variables_task
+    def config_variables_task(variables)
       env_vars = variables.map { |var| [var.name, var.value] }
       { "envs" => env_vars }
     end
@@ -100,16 +108,26 @@ module Homestage
     def homemaker_macros
       { "install" => { "prefix" => ["sudo", "apt", "install", "-yqq"] } }
     end
+
+    def self.parse_variables(path)
+      config = YAML.load(File.read(path))
+      config.map do |scope, variables|
+        variables.map do |variable|
+          Variable.parse(scope, variable)
+        end
+      end.flatten
+    end
   end
 
   class Variable
-    attr_reader :name, :value
+    attr_reader :scope, :name, :value
 
-    def self.parse(config)
-      Variable.new(name: config.first, value: config.last)
+    def self.parse(scope, config)
+      Variable.new(scope: scope, name: config.first, value: config.last)
     end
 
-    def initialize(name:, value: )
+    def initialize(scope:, name:, value: )
+      @scope = scope
       @name = name
       @value = value
     end
@@ -151,10 +169,12 @@ module Homestage
     private
 
     def to_task
+      config_variables_deps = ["global_config_variables"]
+      config_variables_deps << "#{name}_config_variables"
       profile_deps = dependencies.map { |d| d.name }
       package_deps = packages.map { |p| "#{name}_#{p.name}" }
 
-      { "deps" => profile_deps + package_deps }
+      { "deps" => config_variables_deps + profile_deps + package_deps }
     end
   end
 
@@ -204,7 +224,7 @@ module Homestage
         }
       }
 
-      task["#{profile.name}_#{name}_config"]["deps"] = ["config_variables"] if templates
+      task["#{profile.name}_#{name}_config"]["deps"] = ["global_config_variables", "#{profile.name}_config_variables"] if templates
 
       task
     end
