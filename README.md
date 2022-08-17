@@ -2,7 +2,7 @@
 
 ## Requirements
 - git
-- bash
+- ruby
 
 ## Installation
 
