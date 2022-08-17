@@ -2,3 +2,5 @@
 - run a check on templates to see if undeclared variables are in use or declared vars are not used
 - verbose mode
 - replace option, by default asks to replace
+- command to bootstrap secrets.yml file
+- merge variables from homestage.yml and secrets.yml at config parsing
