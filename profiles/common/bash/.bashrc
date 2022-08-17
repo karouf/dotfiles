@@ -173,9 +173,12 @@ esac
 # Source all the bash scripts from my dotfiles repo
 export DOTFILES_ROOT=$HOME/code/dotfiles
 
-for file in $DOTFILES_ROOT/current/**/*.bash
+for profile in $DOTFILES_ROOT/current/*
 do
-  source $file
+    for file in $profile/**/*.bash
+    do
+      source $file
+    done
 done
 
 export VISUAL=vim

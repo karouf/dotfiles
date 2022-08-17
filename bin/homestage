@@ -312,7 +312,7 @@ when "do"
 
   config.used_profiles_for(found_profile).each do |profile|
     if profile_dirs.include? profile.name
-      system("ln -s #{profile.name} current/#{profile.name}")
+      system("cd current && ln -s ../profiles/#{profile.name} #{profile.name}")
     end
   end
 
