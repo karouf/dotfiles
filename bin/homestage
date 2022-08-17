@@ -286,7 +286,7 @@ def usage
   puts "  list            list available profiles"
 end
 
-config = Homestage::Config.parse("profiles.yml")
+config = Homestage::Config.parse("homestage.yml")
 
 action = ARGV.shift
 
