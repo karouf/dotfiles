@@ -306,7 +306,49 @@ def usage
   puts "  list            list available profiles"
 end
 
+def check_config_variables(config)
+  results = `grep -PRo "\\.Env\\.\\K[a-zA-Z]+" profiles/* 2>/dev/null`
+
+  used_variables = results.lines.map { |l| l.chomp }
+    .map { |l| l.split(":") }
+    .reduce({}) do |h, v|
+      file = v.first
+      var = v.last
+      h[var] ||= []
+      h[var] << file
+      h
+    end
+
+  declared_variables = config.variables.map(&:name).uniq
+
+  declared_but_not_used = declared_variables.select { |v| !used_variables.keys.include? v }
+  used_but_not_declared = used_variables.keys.select { |v| !declared_variables.include? v }
+
+  unless declared_but_not_used.empty?
+    puts "Variables declared but not used:"
+    declared_but_not_used.each do |variable|
+      puts "  - #{variable}"
+    end
+    puts
+  end
+
+  unless used_but_not_declared.empty?
+    puts "Variables used but not declared:"
+    used_but_not_declared.each do |variable|
+      puts "  - #{variable} used in:"
+
+      used_variables[variable].each do |file|
+        puts "    - #{file}"
+      end
+    end
+    puts
+    exit 1
+  end
+end
+
 config = Homestage::Config.parse("homestage.yml")
+
+check_config_variables(config)
 
 action = ARGV.shift
 
