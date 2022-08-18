@@ -19,13 +19,18 @@ module Homestage
 
     attr_accessor :variables, :profiles
 
-    def self.parse(file_path)
-      config_file = YAML.load(File.read(file_path))
+    def self.parse(config_path, secrets_path)
+      config_file = YAML.load(File.read(config_path))
 
       raise InvalidConfig unless valid_config?(config_file)
 
       config = Config.new
+
       config.variables = parse_variables(config_file["variables"])
+      secrets_config = YAML.load(File.read(secrets_path))
+      config.variables += parse_variables(secrets_config)
+      config.variables.uniq! { |var| [var.scope, var.name] }
+
       config.profiles = parse_config_item(config_file, "profiles", Profile)
       config
     end
@@ -109,8 +114,7 @@ module Homestage
       { "install" => { "prefix" => ["sudo", "apt", "install", "-yqq"] } }
     end
 
-    def self.parse_variables(path)
-      config = YAML.load(File.read(path))
+    def self.parse_variables(config)
       config.map do |scope, variables|
         variables.map do |variable|
           Variable.parse(scope, variable)
@@ -351,7 +355,7 @@ def check_config_variables(config)
   end
 end
 
-config = Homestage::Config.parse("homestage.yml")
+config = Homestage::Config.parse("homestage.yml", "secrets.yml")
 
 check_config_variables(config)
 

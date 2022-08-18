@@ -1,4 +1,6 @@
 - verbose mode
 - replace option, by default asks to replace
 - command to bootstrap secrets.yml file
-- merge variables from homestage.yml and secrets.yml at config parsing
+- add a check for multiple declarations of the same variable
+  for the same scope, and issue a warning saying only the first
+  declaration will be used
