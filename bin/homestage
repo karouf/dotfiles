@@ -304,12 +304,13 @@ def usage
   puts "  do <profile>    apply given profile"
   puts "  help            display this message"
   puts "  list            list available profiles"
+  puts "  vars:bootstrap  generate sample variables.yml file"
 end
 
-def check_config_variables(config)
+def get_used_variables
   results = `grep -PRo "\\.Env\\.\\K[a-zA-Z]+" profiles/* 2>/dev/null`
 
-  used_variables = results.lines.map { |l| l.chomp }
+  results.lines.map { |l| l.chomp }
     .map { |l| l.split(":") }
     .reduce({}) do |h, v|
       file = v.first
@@ -318,6 +319,10 @@ def check_config_variables(config)
       h[var] << file
       h
     end
+end
+
+def check_config_variables(config)
+  used_variables = get_used_variables
 
   declared_variables = config.variables.map(&:name).uniq
 
@@ -380,6 +385,11 @@ when "do"
 
 when "list"
   puts config.leaf_profiles
+when "vars:bootstrap"
+  used_variables = Hash[get_used_variables.map{|k, v| [k, nil] }]
+  File.open("variables.yml.sample", "w") do |f|
+    f.write(YAML.dump({ "global" => used_variables }))
+  end
 else
   usage
 end
