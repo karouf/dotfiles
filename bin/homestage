@@ -355,6 +355,22 @@ def check_config_variables(config)
   end
 end
 
+def profiles_depending_on(targets, config)
+  targets = [targets] unless targets.is_a? Enumerable
+
+  dependents = []
+  targets.each do |target|
+    dependents << config.profiles.select do |profile|
+      profile.dependencies.map(&:name).include? target
+    end.map(&:name)
+  end
+  dependents.flatten!.uniq!
+  return if dependents.empty?
+
+  dependents << profiles_depending_on(dependents, config)
+  dependents.flatten.uniq
+end
+
 config = Homestage::Config.parse("homestage.yml", "secrets.yml")
 
 check_config_variables(config)
@@ -390,9 +406,24 @@ when "do"
 when "list"
   puts config.leaf_profiles
 when "vars:bootstrap"
-  used_variables = Hash[get_used_variables.map{|k, v| [k, nil] }]
+  used_variables = get_used_variables
+
+  profiles_vars = {}
+  used_variables.each do |key, files|
+    profiles = files.map { |f| f.split("/")[1] }
+    profiles.map! { |p| profiles_depending_on(p, config) }.flatten!.uniq!
+    profiles.reject! { |p| p.nil? }
+
+    profiles_vars["global"] ||= {}
+    profiles_vars["global"][key] = nil
+    profiles.each do |p|
+      profiles_vars[p] ||= {}
+      profiles_vars[p][key] = nil
+    end
+  end
+
   File.open("variables.yml.sample", "w") do |f|
-    f.write(YAML.dump({ "global" => used_variables }))
+    f.write(YAML.dump(profiles_vars))
   end
 else
   usage
