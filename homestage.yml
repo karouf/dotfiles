@@ -51,6 +51,7 @@ profiles:
   home:
     featured: yes
     dependencies:
+      - common
       - ruby
       - python
 
