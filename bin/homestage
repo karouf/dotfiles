@@ -115,6 +115,8 @@ module Homestage
     end
 
     def self.parse_variables(config)
+      return [] unless config
+
       config.map do |scope, variables|
         variables.map do |variable|
           Variable.parse(scope, variable)
