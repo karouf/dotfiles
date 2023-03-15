@@ -409,6 +409,11 @@ when "do"
 when "list"
   puts config.leaf_profiles
 when "vars:bootstrap"
+  if File.exists?("variables.yml") || File.exists?("secrets.yml")
+    puts "variables.yml or secrets.yml already exists"
+    exit 1
+  end
+
   used_variables = get_used_variables
 
   profiles_vars = {}
