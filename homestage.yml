@@ -16,8 +16,8 @@ profiles:
       - gnupg2:
           links:
             - .gnupg
-      - chromium
-      - firefox-esr
+      - chromium-browser
+      - firefox
 
   dev:
     dependencies:
