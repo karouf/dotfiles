@@ -394,6 +394,7 @@ when "do"
   system("rm tmp_homemaker_generated.yml")
 
   system("rm -rf current/*")
+  system("mkdir -p current")
   profile_dirs = []
   Dir.chdir('profiles') do
     profile_dirs = Dir.glob('*').select { |f| File.directory? f }
