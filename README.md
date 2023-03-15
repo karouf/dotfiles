@@ -3,6 +3,7 @@
 ## Requirements
 - git
 - ruby
+- [homemaker](https://github.com/FooSoft/homemaker)
 
 ## Installation
 
@@ -11,11 +12,12 @@ mkdir -p $HOME/code
 cd $HOME/code
 git clone https://github.com/karouf/dotfiles.git
 cd dotfiles
-cp config.sample config
+bin/homestage vars:bootstrap
+mv variables.sample.yml variables.yml
 ```
 
-Edit variables in `config` and then install evrything:
+Edit variables in `variables.yml` and then install everything:
 
 ```bash
-./script/bootstrap
+bin/homestage do <profile>
 ```
