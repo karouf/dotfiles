@@ -430,7 +430,7 @@ when "vars:bootstrap"
     end
   end
 
-  File.open("variables.yml.sample", "w") do |f|
+  File.open("variables.yml", "w") do |f|
     f.write(YAML.dump(profiles_vars))
   end
 else
