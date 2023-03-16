@@ -11,6 +11,7 @@ Plug 'lifepillar/vim-solarized8'                    " Solarized theme
 Plug 'tpope/vim-endwise'                            " Automatically end structures such as if/end in Ruby
 Plug 'airblade/vim-gitgutter'                       " Display git info in the sign column
 Plug 'dense-analysis/ale'                           " Auto linting
+Plug 'tpope/vim-fugitive'                           " Git bindings
 
 call plug#end()
 
