@@ -1,6 +1,7 @@
 [user]
 	name = {{ .Env.name }}
 	email = {{ .Env.email }}
+
 [core]
 	excludesfile = ~/.gitignore
 	pager = delta
@@ -8,6 +9,7 @@
 [color]
 	status = auto
 	diff = auto
+
 [alias]
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 
