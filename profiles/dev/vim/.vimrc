@@ -13,6 +13,7 @@ Plug 'airblade/vim-gitgutter'                       " Display git info in the si
 Plug 'dense-analysis/ale'                           " Auto linting
 Plug 'tpope/vim-fugitive'                           " Git bindings
 Plug 'airblade/vim-localorie'                       " I18n tools
+Plug 'github/copilot.vim'                           " Github Copilot
 
 call plug#end()
 
@@ -86,3 +87,6 @@ endfunction
 let g:coc_global_extensions = ['coc-solargraph']
 " Tell Coc where to find nodejs
 let g:coc_node_path = trim(system('which node'))
+
+" Copilot config
+let g:copilot_filetypes = {'yaml': v:true}
