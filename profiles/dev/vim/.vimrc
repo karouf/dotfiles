@@ -12,6 +12,7 @@ Plug 'tpope/vim-endwise'                            " Automatically end structur
 Plug 'airblade/vim-gitgutter'                       " Display git info in the sign column
 Plug 'dense-analysis/ale'                           " Auto linting
 Plug 'tpope/vim-fugitive'                           " Git bindings
+Plug 'airblade/vim-localorie'                       " I18n tools
 
 call plug#end()
 
