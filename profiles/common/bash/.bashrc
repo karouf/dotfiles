@@ -183,6 +183,7 @@ done
 
 export VISUAL=vim
 export EDITOR=$VISUAL
+export HISTSIZE=10000
 
 # Use vi bindings in the shell
 set -o vi
