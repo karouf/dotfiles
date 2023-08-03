@@ -14,6 +14,7 @@ Plug 'dense-analysis/ale'                           " Auto linting
 Plug 'tpope/vim-fugitive'                           " Git bindings
 Plug 'airblade/vim-localorie'                       " I18n tools
 Plug 'github/copilot.vim'                           " Github Copilot
+Plug 'ntpeters/vim-better-whitespace'               " Highlight trailing whitespaces
 
 call plug#end()
 
