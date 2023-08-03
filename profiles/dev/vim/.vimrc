@@ -42,6 +42,8 @@ set cursorline
 set signcolumn=yes
 " Enable syntax highlighting
 syntax on
+" Show marker at column 120
+set colorcolumn=120
 
 " Fuzzy search for pattern in files
 nmap <C-p> :Rg<CR>
