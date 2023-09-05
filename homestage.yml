@@ -37,13 +37,13 @@ profiles:
             - .gitignore
           commands:
             - "wget https://github.com/dandavison/delta/releases/download/0.15.1/git-delta_0.15.1_amd64.deb && sudo dpkg -i git-delta_0.15.1_amd64.deb && rm git-delta_0.15.1_amd64.deb"
-  
+
   ruby:
     dependencies:
       - dev
     roles:
       - rvm
-  
+
   python:
     dependencies:
       - dev
@@ -51,6 +51,10 @@ profiles:
       - python3
       - python3-pip
       - virtualenv
+
+  go:
+    dependencies:
+      - dev
 
   home:
     featured: yes
@@ -64,3 +68,4 @@ profiles:
     dependencies:
       - common
       - ruby
+      - go
